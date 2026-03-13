@@ -50,9 +50,12 @@ tailwind.config = {
   .seg-badge{background:#f6e5b8;color:#655b34;font-size:11px;font-weight:700;padding:1px 6px;border-radius:40px;}
 
   /* Filter checkbox label */
-  .filter-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:#afadaa;padding:4px 0;transition:color 0.15s;}
-  .filter-label:hover{color:#fff;}
-  .filter-label input{width:14px;height:14px;flex-shrink:0;}
+  .filter-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;color:#fff;padding:8px 12px;transition:background 0.15s;border-radius:4px;}
+  .filter-label:hover{background:rgba(255,255,255,0.05);}
+  .filter-label input[type="checkbox"],.filter-label input[type="radio"]{width:16px;height:16px;flex-shrink:0;accent-color:#dcb05e;cursor:pointer;}
+  .filter-card{background:#212a3a;border:1px solid #293548;border-radius:12px;overflow:hidden;}
+  .filter-card-title{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;cursor:pointer;}
+  .filter-card-title span{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:#fff;line-height:1;}
 
   /* Result card list view */
   .result-card{background:#212a3a;border:1px solid #373329;border-radius:16px;padding:0;display:flex;overflow:hidden;cursor:pointer;transition:border-color 0.2s;}
@@ -71,6 +74,14 @@ tailwind.config = {
   /* Carousel */
   .carousel-track{display:flex;transition:transform 0.4s ease;}
 
+  /* Voice cards responsive */
+  @media (max-width: 767px) {
+    .voice-cards-grid {
+      grid-template-columns: 1fr !important;
+      padding: 0 20px !important;
+    }
+  }
+
   /* Toast */
   #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#293548;border:1px solid #3c4d69;color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;transition:transform 0.3s;z-index:999;}
   #toast.show{transform:translateX(-50%) translateY(0);}
@@ -83,7 +94,7 @@ tailwind.config = {
     .left-sidebar.open{left:0;}
   }
   @media(min-width:768px){
-    .left-sidebar{position:sticky;top:16px;align-self:flex-start;max-height:calc(100vh - 32px);overflow-y:auto;}
+    .left-sidebar{max-height:calc(100vh - 32px);overflow-y:auto;}
   }
 
   /* Read more truncation */
@@ -161,14 +172,14 @@ tailwind.config = {
 <div style="background:linear-gradient(to top, #212a3a 0%, #151b24 50%);padding:64px 0 64px;text-align:center;">
   <p style="color:#dcb05e;font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px;">Voices of Remembrance</p>
   <h2 style="font-family:'DM Serif Text',serif;font-size:32px;color:#fff;margin-bottom:40px;">Their stories live on through those who loved them</h2>
-  <div style="max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" id="voice-cards">
+  <div style="max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;" id="voice-cards" class="voice-cards-grid">
     <!-- populated by JS -->
   </div>
-  <div style="margin-top:48px;">
-    <p style="color:#afadaa;font-size:14px;margin-bottom:16px;">Have a memory to share? Their stories live on through the words of those who knew them.</p>
-    <div style="display:flex;gap:12px;justify-content:center;">
-      <button onclick="switchTab('memories')" style="border:1px solid #fff;color:#fff;padding:10px 24px;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;background:transparent;">Share a Memory</button>
-      <button onclick="switchTab('memorials')" style="background:#e2ba60;color:#262116;padding:10px 24px;border-radius:9999px;font-size:14px;font-weight:600;cursor:pointer;border:none;">View All Memorials</button>
+  <div style="margin-top:48px;display:flex;flex-direction:column;align-items:center;gap:16px;">
+    <p style="font-family:'DM Sans',sans-serif;font-size:18px;font-weight:400;color:#b0c0d6;line-height:1.5;margin:0;text-align:center;">Have a memory to share? Their stories live on through yours.</p>
+    <div style="display:flex;gap:16px;align-items:center;">
+      <button onclick="switchTab('memories')" style="background:#e2ba60;color:#262116;height:40px;padding:0 20px;border-radius:9999px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;white-space:nowrap;">Add a Memory</button>
+      <button onclick="switchTab('memories')" style="background:transparent;color:#c49e54;height:40px;padding:0 20px;border-radius:9999px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:1px solid #c49e54;white-space:nowrap;">See all 14,382 Memories</button>
     </div>
   </div>
 </div>
@@ -202,66 +213,82 @@ tailwind.config = {
     <!-- LEFT SIDEBAR -->
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
     <aside class="left-sidebar w-60 flex-shrink-0" id="left-sidebar-memorials">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
         <h3 style="font-family:'DM Serif Text',serif;font-size:20px;font-weight:400;color:#fff;line-height:1.3;">Filter By</h3>
-        <button onclick="clearFilters()" style="font-size:12px;color:#dcb05e;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;" id="clear-all-btn">
+        <button onclick="clearFilters()" style="font-family:'DM Sans',sans-serif;font-size:12px;color:#dcb05e;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;" id="clear-all-btn">
           <span>Clear All</span><i class="ph-light ph-arrows-clockwise" style="font-size:14px;"></i>
         </button>
       </div>
 
-      <!-- 9/11 Locations -->
-      <div style="margin-bottom:20px;">
-        <p style="font-size:12px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">9/11 Locations</p>
-        <div style="display:flex;flex-direction:column;gap:2px;" id="filter-locations">
-          <label class="filter-label"><input type="checkbox" value="WTC Tower 1" onchange="applyFilters()"> World Trade Center Tower 1</label>
-          <label class="filter-label"><input type="checkbox" value="WTC Tower 2" onchange="applyFilters()"> World Trade Center Tower 2</label>
-          <label class="filter-label"><input type="checkbox" value="Pentagon" onchange="applyFilters()"> The Pentagon</label>
-          <label class="filter-label"><input type="checkbox" value="Flight 11" onchange="applyFilters()"> American Flight 11</label>
-          <label class="filter-label"><input type="checkbox" value="Flight 93" onchange="applyFilters()"> United Flight 93</label>
-          <label class="filter-label"><input type="checkbox" value="Flight 175" onchange="applyFilters()"> United Flight 175</label>
-          <label class="filter-label"><input type="checkbox" value="Flight 77" onchange="applyFilters()"> American Flight 77</label>
-        </div>
-      </div>
-      <div style="height:1px;background:#373329;margin-bottom:20px;"></div>
+      <!-- Filter sections -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
 
-      <!-- Person Location -->
-      <div style="margin-bottom:20px;">
-        <p style="font-size:12px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Home State</p>
-        <div style="display:flex;flex-direction:column;gap:2px;" id="filter-states">
-          <label class="filter-label"><input type="checkbox" value="NY" onchange="applyFilters()"> New York</label>
-          <label class="filter-label"><input type="checkbox" value="NJ" onchange="applyFilters()"> New Jersey</label>
-          <label class="filter-label"><input type="checkbox" value="TX" onchange="applyFilters()"> Texas</label>
-          <label class="filter-label"><input type="checkbox" value="CA" onchange="applyFilters()"> California</label>
-          <label class="filter-label"><input type="checkbox" value="VA" onchange="applyFilters()"> Virginia</label>
-          <label class="filter-label"><input type="checkbox" value="PA" onchange="applyFilters()"> Pennsylvania</label>
-          <label class="filter-label"><input type="checkbox" value="CT" onchange="applyFilters()"> Connecticut</label>
+        <!-- 9/11 Locations -->
+        <div class="filter-card">
+          <div class="filter-card-title">
+            <span>9/11 Locations</span>
+            <i class="ph-light ph-caret-up" style="font-size:18px;color:#afadaa;"></i>
+          </div>
+          <div style="padding-bottom:8px;" id="filter-locations">
+            <label class="filter-label"><input type="checkbox" value="WTC Tower 1" onchange="applyFilters()"> World Trade Center Tower 1</label>
+            <label class="filter-label"><input type="checkbox" value="WTC Tower 2" onchange="applyFilters()"> World Trade Center Tower 2</label>
+            <label class="filter-label"><input type="checkbox" value="Pentagon" onchange="applyFilters()"> The Pentagon</label>
+            <label class="filter-label"><input type="checkbox" value="Flight 11" onchange="applyFilters()"> American Flight 11</label>
+            <label class="filter-label"><input type="checkbox" value="Flight 93" onchange="applyFilters()"> United Flight 93</label>
+            <label class="filter-label"><input type="checkbox" value="Flight 175" onchange="applyFilters()"> United Flight 175</label>
+            <label class="filter-label"><input type="checkbox" value="Flight 77" onchange="applyFilters()"> American Flight 77</label>
+          </div>
         </div>
-      </div>
-      <div style="height:1px;background:#373329;margin-bottom:20px;"></div>
 
-      <!-- Newspapers -->
-      <div style="margin-bottom:20px;">
-        <p style="font-size:12px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Featured In</p>
-        <div style="display:flex;flex-direction:column;gap:2px;" id="filter-papers">
-          <label class="filter-label"><input type="checkbox" value="NYT" onchange="applyFilters()"> New York Times</label>
-          <label class="filter-label"><input type="checkbox" value="WP" onchange="applyFilters()"> Washington Post</label>
-          <label class="filter-label"><input type="checkbox" value="HC" onchange="applyFilters()"> Houston Chronicle</label>
-          <label class="filter-label"><input type="checkbox" value="DMN" onchange="applyFilters()"> Dallas Morning News</label>
+        <!-- Home State -->
+        <div class="filter-card">
+          <div class="filter-card-title">
+            <span>Home State</span>
+            <i class="ph-light ph-caret-up" style="font-size:18px;color:#afadaa;"></i>
+          </div>
+          <div style="padding-bottom:8px;" id="filter-states">
+            <label class="filter-label"><input type="checkbox" value="NY" onchange="applyFilters()"> New York</label>
+            <label class="filter-label"><input type="checkbox" value="NJ" onchange="applyFilters()"> New Jersey</label>
+            <label class="filter-label"><input type="checkbox" value="TX" onchange="applyFilters()"> Texas</label>
+            <label class="filter-label"><input type="checkbox" value="CA" onchange="applyFilters()"> California</label>
+            <label class="filter-label"><input type="checkbox" value="VA" onchange="applyFilters()"> Virginia</label>
+            <label class="filter-label"><input type="checkbox" value="PA" onchange="applyFilters()"> Pennsylvania</label>
+            <label class="filter-label"><input type="checkbox" value="CT" onchange="applyFilters()"> Connecticut</label>
+          </div>
         </div>
-      </div>
-      <div style="height:1px;background:#373329;margin-bottom:20px;"></div>
 
-      <!-- Layout -->
-      <div>
-        <p style="font-size:12px;font-weight:600;color:#fff;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Layout</p>
-        <div style="display:flex;gap:8px;">
-          <button onclick="setLayout('list')" id="layout-list" style="flex:1;padding:8px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:#3c4d69;color:#fff;border:1px solid #3c4d69;display:flex;align-items:center;justify-content:center;gap:4px;">
-            <i class="ph-light ph-list" style="font-size:16px;"></i> List
-          </button>
-          <button onclick="setLayout('grid')" id="layout-grid" style="flex:1;padding:8px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#afadaa;border:1px solid #373329;display:flex;align-items:center;justify-content:center;gap:4px;">
-            <i class="ph-light ph-grid-four" style="font-size:16px;"></i> Grid
-          </button>
+        <!-- Newspapers -->
+        <div class="filter-card">
+          <div class="filter-card-title">
+            <span>Newspapers</span>
+            <i class="ph-light ph-caret-up" style="font-size:18px;color:#afadaa;"></i>
+          </div>
+          <div style="padding-bottom:8px;" id="filter-papers">
+            <label class="filter-label"><input type="checkbox" value="NYT" onchange="applyFilters()"> New York Times</label>
+            <label class="filter-label"><input type="checkbox" value="WP" onchange="applyFilters()"> Washington Post</label>
+            <label class="filter-label"><input type="checkbox" value="HC" onchange="applyFilters()"> Houston Chronicle</label>
+            <label class="filter-label"><input type="checkbox" value="DMN" onchange="applyFilters()"> Dallas Morning News</label>
+          </div>
         </div>
+
+        <!-- Layout -->
+        <div class="filter-card">
+          <div class="filter-card-title">
+            <span>Layout</span>
+            <i class="ph-light ph-caret-up" style="font-size:18px;color:#afadaa;"></i>
+          </div>
+          <div style="padding:0 12px 12px;display:flex;">
+            <button onclick="setLayout('list')" id="layout-list" style="flex:1;height:36px;border-radius:6px 0 0 6px;font-size:13px;font-weight:600;cursor:pointer;background:#e2ba60;color:#262116;border:1px solid #e2ba60;display:flex;align-items:center;justify-content:center;gap:4px;">
+              <i class="ph-light ph-list" style="font-size:16px;"></i> List
+            </button>
+            <button onclick="setLayout('grid')" id="layout-grid" style="flex:1;height:36px;border-radius:0 6px 6px 0;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#afadaa;border:1px solid #514d45;margin-left:-1px;display:flex;align-items:center;justify-content:center;gap:4px;">
+              <i class="ph-light ph-grid-four" style="font-size:16px;"></i> Grid
+            </button>
+          </div>
+        </div>
+
       </div>
     </aside>
 
@@ -363,7 +390,7 @@ tailwind.config = {
     </main>
 
     <!-- RIGHT SIDEBAR -->
-    <aside class="hidden lg:block w-72 flex-shrink-0">
+    <aside class="hidden lg:block w-72 flex-shrink-0" style="position:sticky;top:24px;align-self:flex-start;">
       <h3 style="font-family:'DM Serif Text',serif;font-size:20px;font-weight:400;color:#fff;line-height:1.3;margin-bottom:16px;">Honor Their Memory</h3>
 
       <!-- Charity -->
@@ -373,7 +400,12 @@ tailwind.config = {
           <p style="font-family:'DM Sans',sans-serif;font-size:16px;color:#fff;margin:0;">The American Red Cross</p>
         </div>
         <div style="background:#fff;border-radius:8px;width:148px;height:64px;display:flex;align-items:center;justify-content:center;padding:5px 4px;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/American_Red_Cross_logo.svg/200px-American_Red_Cross_logo.svg.png" alt="American Red Cross" style="max-width:108px;max-height:48px;object-fit:contain;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 48" style="max-width:108px;max-height:48px;" role="img" aria-label="American Red Cross">
+            <rect x="18" y="6" width="12" height="36" fill="#ED1B2E"/>
+            <rect x="6" y="18" width="36" height="12" fill="#ED1B2E"/>
+            <text x="52" y="20" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#ED1B2E" letter-spacing="0.3">AMERICAN</text>
+            <text x="52" y="31" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#ED1B2E" letter-spacing="0.3">RED CROSS</text>
+          </svg>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;">
           <button style="background:#e2ba60;color:#262116;padding:0 12px;height:32px;border-radius:9999px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;">Make a Donation</button>
@@ -510,7 +542,7 @@ tailwind.config = {
     </main>
 
     <!-- RIGHT SIDEBAR MEMORIES -->
-    <aside class="hidden lg:block w-72 flex-shrink-0">
+    <aside class="hidden lg:block w-72 flex-shrink-0" style="position:sticky;top:24px;align-self:flex-start;">
       <h3 style="font-family:'DM Serif Text',serif;font-size:20px;font-weight:400;color:#fff;line-height:1.3;margin-bottom:16px;">Honor Their Memory</h3>
 
       <!-- Charity -->
@@ -520,7 +552,12 @@ tailwind.config = {
           <p style="font-family:'DM Sans',sans-serif;font-size:16px;color:#fff;margin:0;">The American Red Cross</p>
         </div>
         <div style="background:#fff;border-radius:8px;width:148px;height:64px;display:flex;align-items:center;justify-content:center;padding:5px 4px;">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/American_Red_Cross_logo.svg/200px-American_Red_Cross_logo.svg.png" alt="American Red Cross" style="max-width:108px;max-height:48px;object-fit:contain;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 48" style="max-width:108px;max-height:48px;" role="img" aria-label="American Red Cross">
+            <rect x="18" y="6" width="12" height="36" fill="#ED1B2E"/>
+            <rect x="6" y="18" width="36" height="12" fill="#ED1B2E"/>
+            <text x="52" y="20" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#ED1B2E" letter-spacing="0.3">AMERICAN</text>
+            <text x="52" y="31" font-family="Arial,sans-serif" font-size="8.5" font-weight="700" fill="#ED1B2E" letter-spacing="0.3">RED CROSS</text>
+          </svg>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;">
           <button style="background:#e2ba60;color:#262116;padding:0 12px;height:32px;border-radius:9999px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;">Make a Donation</button>
@@ -982,14 +1019,16 @@ function setLayout(mode){
   state.layoutMode = mode;
   const listBtn = document.getElementById('layout-list');
   const gridBtn = document.getElementById('layout-grid');
+  const activeStyle='flex:1;height:36px;font-size:13px;font-weight:600;cursor:pointer;background:#e2ba60;color:#262116;border:1px solid #e2ba60;display:flex;align-items:center;justify-content:center;gap:4px;';
+  const inactiveStyle='flex:1;height:36px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#afadaa;border:1px solid #514d45;display:flex;align-items:center;justify-content:center;gap:4px;';
   if(mode==='grid'){
     document.body.classList.add('grid-view');
-    listBtn.style.cssText='flex:1;padding:8px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#afadaa;border:1px solid #373329;display:flex;align-items:center;justify-content:center;gap:4px;';
-    gridBtn.style.cssText='flex:1;padding:8px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:#3c4d69;color:#fff;border:1px solid #3c4d69;display:flex;align-items:center;justify-content:center;gap:4px;';
+    listBtn.style.cssText=inactiveStyle+'border-radius:6px 0 0 6px;';
+    gridBtn.style.cssText=activeStyle+'border-radius:0 6px 6px 0;margin-left:-1px;';
   } else {
     document.body.classList.remove('grid-view');
-    listBtn.style.cssText='flex:1;padding:8px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:#3c4d69;color:#fff;border:1px solid #3c4d69;display:flex;align-items:center;justify-content:center;gap:4px;';
-    gridBtn.style.cssText='flex:1;padding:8px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#afadaa;border:1px solid #373329;display:flex;align-items:center;justify-content:center;gap:4px;';
+    listBtn.style.cssText=activeStyle+'border-radius:6px 0 0 6px;';
+    gridBtn.style.cssText=inactiveStyle+'border-radius:0 6px 6px 0;margin-left:-1px;';
   }
   renderResults();
 }
