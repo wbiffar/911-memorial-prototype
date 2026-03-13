@@ -654,7 +654,66 @@ const PAPER_NAMES = {
   'WT':'Waco Tribune-Herald'
 };
 
-const VICTIMS = [
+// ============================================================
+// PERSON IDs — replace with real Legacy.com 9/11 victim IDs
+// ============================================================
+const PERSON_IDS = [
+  5052822, 60911591, 60911587, 60910268, 60910284,
+  60910910, 60909591, 60909597, 60909623, 60909632,
+  60909765, 60909626, 60909723, 60909690, 60909856,
+  60909883, 60909886, 60910022, 60909833, 60909895,
+  60909934, 60909944, 60910094, 60910163, 60910430,
+  60910438, 60910368, 60909322, 60909323, 60909303,
+  60909304, 60909378, 60909335, 60909339, 60909364,
+];
+
+// Supplementary metadata (fields not returned by the API)
+// Keyed by personId — loc, state, role, org, paper, memories can be filled in over time
+const PERSON_META = {
+  5052822:  { name:"George C. Cain",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60911591: { name:"Moises N. Rivas",                     loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60911587: { name:"Babita Guman",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910268: { name:"Janice Scott",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910284: { name:"Gerald (Geep) P. Fisher",             loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910910: { name:"Antoinette (Toni) Sherman",           loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909591: { name:"Mary Wahlstrom",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909597: { name:"Candace Lee Williams",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909623: { name:"Thomas Hannafin",                     loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909632: { name:"John Keohane",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909765: { name:"Louis J. Nacke",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909626: { name:"Captain Walter Hynes",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909723: { name:"Michael Theodoridis",                 loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909690: { name:"Lt. Glenn Wilkinson",                 loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909856: { name:"William L. Henry Jr.",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909883: { name:"Lt. Dennis Mojica",                   loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909886: { name:"Manuel Mojica Jr.",                   loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910022: { name:"Donna Bowen",                         loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909833: { name:"Louis Arena",                         loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909895: { name:"Richard Prunty",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909934: { name:"Lt. Michael Warchola",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909944: { name:"John Charles Willett",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910094: { name:"Rosa (Rosemary) Maria Chapa",         loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910163: { name:"Scott Powell",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910430: { name:"Lt. Commander David Lucian Williams", loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910438: { name:"Angela Houtz",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60910368: { name:"Maj. Kip P. Taylor",                  loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909322: { name:"Linda Gronlund",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909323: { name:"Thomas E. Burnett Jr.",               loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909303: { name:"CeeCee Lyles",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909304: { name:"Sandra (Sandy) W. Bradshaw",          loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909378: { name:"Ronald Brandhorst Gamboa",            loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909335: { name:"Mark Rothenberg",                     loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909339: { name:"Colleen Fraser",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  60909364: { name:"Daniel Brandhorst Gamboa",            loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+};
+
+// Populated async by loadVictims() — do not edit directly
+let VICTIMS = [];
+
+// ============================================================
+// FALLBACK mock data (used if PERSON_IDS is empty)
+// ============================================================
+const VICTIMS_MOCK = [
   {id:1,name:"Robert James Thomas",born:1962,loc:"WTC Tower 1",state:"NY",role:"Financial Analyst",org:"Cantor Fitzgerald",paper:"NYT",bio:"Robert was known throughout the office for his infectious laugh and the family photos that covered every inch of his desk. He coached his son's Little League team every spring and never missed a game. He is survived by his wife Carol and three children.",memories:14,photo:1},
   {id:2,name:'Danielle "Toni" Meadows',born:1972,loc:"WTC Tower 2",state:"NJ",role:"Executive Assistant",org:"Marsh & McLennan",paper:"NYT",bio:"Toni lit up every room she entered. She was the kind of person who remembered everyone's birthday and always had a kind word ready. Her brother Marcus says she was 'the glue that held our family together.'",memories:8,photo:2},
   {id:3,name:"Walter Eugene Simmons",born:1958,loc:"Pentagon",state:"VA",role:"Senior Defense Analyst",org:"U.S. Department of Defense",paper:"WP",bio:"Walt dedicated 27 years of service to his country with humility and quiet strength. A devoted husband and father of two daughters, he spent weekends coaching youth soccer and tending his vegetable garden in Arlington.",memories:11,photo:3},
@@ -706,6 +765,54 @@ const VICTIMS = [
   {id:49,name:"Brian Shaughnessy",born:1955,loc:"WTC Tower 1",state:"NY",role:"Senior Vice President",org:"AON Corporation",paper:"NYT",bio:"Brian had worked in the towers for 18 years, watching the New York skyline change around them. His daughter says he kept a baseball signed by Mickey Mantle on his desk and a photo of his family next to his computer. He is profoundly missed.",memories:10,photo:49},
   {id:50,name:"Yolanda Torres",born:1967,loc:"WTC Tower 2",state:"NY",role:"Restaurant Worker",org:"Windows on the World",paper:"NYT",bio:"Yolanda worked the early shift at the Windows on the World restaurant and was beloved by regulars and colleagues alike. She was raising two teenage children on her own. Her daughter Luz says her mother's greatest joy was cooking for the people she loved.",memories:8,photo:50}
 ];
+
+// ============================================================
+// API FETCH
+// ============================================================
+async function fetchPerson(id) {
+  const res = await fetch(`https://obit-intake.prod.legint.net/api/v1/person/${id}/`);
+  if (!res.ok) throw new Error(`Failed ${id}: ${res.status}`);
+  const d = await res.json();
+  const meta = PERSON_META[id] || {};
+  // Prefer obituaries[0] text, fall back to root obituaryText
+  const bio = (d.obituaries?.[0]?.obituaryText || d.obituaryText || '').trim();
+  return {
+    id:       d.personId,
+    name:     d.fullName || meta.name || 'Unknown',
+    born:     d.dateOfBirth ? new Date(d.dateOfBirth).getFullYear() : null,
+    photo:    d.imageUrl || null,
+    bio:      bio,
+    loc:      meta.loc  || '',
+    state:    meta.state|| '',
+    role:     meta.role || '',
+    org:      meta.org  || '',
+    paper:    meta.paper|| '',
+    memories: meta.memories || 0,
+  };
+}
+
+function showLoadingState() {
+  const el = document.getElementById('results-container');
+  if (el) el.innerHTML = `<div style="text-align:center;color:#afadaa;padding:64px 0;font-family:'DM Sans',sans-serif;font-size:16px;">Loading...</div>`;
+}
+
+async function loadVictims() {
+  if (!PERSON_IDS.length) {
+    // No real IDs supplied — fall back to mock data
+    VICTIMS = VICTIMS_MOCK;
+    applyFilters();
+    return;
+  }
+  showLoadingState();
+  const settled = await Promise.allSettled(PERSON_IDS.map(id => fetchPerson(id)));
+  VICTIMS = settled.filter(r => r.status === 'fulfilled').map(r => r.value);
+  if (!VICTIMS.length) {
+    // All fetches failed (e.g. CORS) — fall back gracefully
+    console.warn('All API fetches failed — using mock data');
+    VICTIMS = VICTIMS_MOCK;
+  }
+  applyFilters();
+}
 
 const POSTS = [
   {id:1,author:"Maria Sanchez",time:"1 day ago",text:"My deepest condolences to all the families who lost loved ones. I'll always remember Mr. Abernathy from the corner store — he always had a kind word and a piece of candy for my kids. His warmth will be sorely missed in our community. May he and all the victims rest in peace.",likes:4,hasPhoto:false,hasCandle:false,replies:[{author:"Johnathan Doebenheimer",time:"20 min ago",text:"I'll cherish the memories we made together. You were a true friend.",likes:0}],tag:"WTC"},
@@ -823,11 +930,13 @@ function locationColor(loc){
 
 function renderVictimCard(v, mode='list'){
   const lc = locationColor(v.loc);
-  const photoSeed = v.id % 70 + 1;
+  // Use real photo URL if available, otherwise fall back to seeded avatar
+  const photoSmall = (v.photo && v.photo.startsWith('http')) ? v.photo : `https://i.pravatar.cc/80?img=${(v.id % 70) + 1}`;
+  const photoLarge = (v.photo && v.photo.startsWith('http')) ? v.photo : `https://i.pravatar.cc/300?img=${(v.id % 70) + 1}`;
   if(mode==='grid'){
     return `<div class="grid-card" data-id="${v.id}" style="display:flex;flex-direction:column;gap:12px;">
       <div style="display:flex;gap:12px;align-items:flex-start;">
-        <img src="https://i.pravatar.cc/80?img=${photoSeed}" alt="${v.name}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #3c4d69;">
+        <img src="${photoSmall}" alt="${v.name}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #3c4d69;">
         <div>
           <h3 style="font-family:'DM Serif Text',serif;font-size:16px;color:#fff;margin-bottom:4px;">${v.name}</h3>
           <p style="font-size:12px;color:#afadaa;">${v.born}–2001</p>
@@ -865,7 +974,7 @@ function renderVictimCard(v, mode='list'){
       </div>
     </div>
     <div style="width:234px;flex-shrink:0;align-self:stretch;overflow:hidden;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;padding-right:16px;">
-      <img src="https://i.pravatar.cc/300?img=${photoSeed}" alt="${v.name}" style="width:234px;max-height:344px;object-fit:contain;display:block;">
+      <img src="${photoLarge}" alt="${v.name}" style="width:234px;max-height:344px;object-fit:contain;display:block;">
     </div>
   </div>`;
 }
@@ -1389,7 +1498,7 @@ function showToast(msg){
 document.addEventListener('DOMContentLoaded',()=>{
   if(document.getElementById('hero-orbs')) buildHeroOrbs();
   buildVoiceCards();
-  applyFilters();
+  loadVictims(); // fetches real data if PERSON_IDS populated; falls back to mock
   updateClearBtn();
   document.getElementById('clear-all-btn').style.display='none';
   // Prevent memorial search form submit on enter
