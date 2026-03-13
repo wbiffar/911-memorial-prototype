@@ -670,41 +670,47 @@ const PERSON_IDS = [
 // Supplementary metadata (fields not returned by the API)
 // Keyed by personId — loc, state, role, org, paper, memories can be filled in over time
 const PERSON_META = {
-  5052822:  { name:"George C. Cain",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60911591: { name:"Moises N. Rivas",                     loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60911587: { name:"Babita Guman",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910268: { name:"Janice Scott",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910284: { name:"Gerald (Geep) P. Fisher",             loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910910: { name:"Antoinette (Toni) Sherman",           loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909591: { name:"Mary Wahlstrom",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909597: { name:"Candace Lee Williams",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909623: { name:"Thomas Hannafin",                     loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909632: { name:"John Keohane",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909765: { name:"Louis J. Nacke",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909626: { name:"Captain Walter Hynes",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909723: { name:"Michael Theodoridis",                 loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909690: { name:"Lt. Glenn Wilkinson",                 loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909856: { name:"William L. Henry Jr.",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909883: { name:"Lt. Dennis Mojica",                   loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909886: { name:"Manuel Mojica Jr.",                   loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910022: { name:"Donna Bowen",                         loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909833: { name:"Louis Arena",                         loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909895: { name:"Richard Prunty",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909934: { name:"Lt. Michael Warchola",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909944: { name:"John Charles Willett",                loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910094: { name:"Rosa (Rosemary) Maria Chapa",         loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910163: { name:"Scott Powell",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910430: { name:"Lt. Commander David Lucian Williams", loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910438: { name:"Angela Houtz",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60910368: { name:"Maj. Kip P. Taylor",                  loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909322: { name:"Linda Gronlund",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909323: { name:"Thomas E. Burnett Jr.",               loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909303: { name:"CeeCee Lyles",                        loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909304: { name:"Sandra (Sandy) W. Bradshaw",          loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909378: { name:"Ronald Brandhorst Gamboa",            loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909335: { name:"Mark Rothenberg",                     loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909339: { name:"Colleen Fraser",                      loc:"", state:"", role:"", org:"", paper:"", memories:0 },
-  60909364: { name:"Daniel Brandhorst Gamboa",            loc:"", state:"", role:"", org:"", paper:"", memories:0 },
+  // WTC North Tower (Tower 1)
+  5052822:  { name: "George C. Cain",                      loc: "WTC Tower 1",        state: "NY", role: "Firefighter",                 org: "FDNY Ladder 7" },
+  60911591: { name: "Moises N. Rivas",                     loc: "WTC Tower 1",        state: "NY", role: "Cafeteria Cook",              org: "Windows on the World" },
+  60909597: { name: "Candace Lee Williams",                loc: "WTC Tower 1",        state: "CT", role: "Intern",                      org: "Merrill Lynch" },
+  60909623: { name: "Thomas Hannafin",                     loc: "WTC Tower 1",        state: "NY", role: "Firefighter",                 org: "FDNY" },
+  60909626: { name: "Captain Walter Hynes",                loc: "WTC Tower 1",        state: "NY", role: "Captain",                    org: "FDNY Ladder 13" },
+  60909690: { name: "Lt. Glenn Wilkinson",                 loc: "WTC Tower 1",        state: "NY", role: "Lieutenant",                 org: "FDNY" },
+  60909856: { name: "William L. Henry Jr.",                loc: "WTC Tower 1",        state: "NY", role: "Firefighter",                 org: "FDNY Rescue 1" },
+  60909883: { name: "Lt. Dennis Mojica",                   loc: "WTC Tower 1",        state: "NY", role: "Lieutenant",                 org: "FDNY Rescue 1" },
+  60909886: { name: "Manuel Mojica Jr.",                   loc: "WTC Tower 1",        state: "NY", role: "Firefighter",                 org: "FDNY Squad 18" },
+  60909833: { name: "Louis Arena",                         loc: "WTC Tower 1",        state: "NY", role: "Firefighter",                 org: "FDNY Ladder 5" },
+  60909895: { name: "Richard Prunty",                      loc: "WTC Tower 1",        state: "NY", role: "Battalion Chief",            org: "FDNY" },
+  60909934: { name: "Lt. Michael Warchola",                loc: "WTC Tower 1",        state: "NY", role: "Lieutenant",                 org: "FDNY Ladder 5" },
+  60909944: { name: "John Charles Willett",                loc: "WTC Tower 1",        state: "NJ", role: "Financial Services",         org: "Cantor Fitzgerald" },
+  // WTC South Tower (Tower 2)
+  60911587: { name: "Babita Guman",                        loc: "WTC Tower 2",        state: "NY", role: "Computer Specialist",        org: "Fiduciary Trust" },
+  60909632: { name: "John Keohane",                        loc: "WTC Tower 2",        state: "NJ", role: "Assistant General Counsel",  org: "Zurich Insurance" },
+  60909910: { name: "Antoinette (Toni) Sherman",           loc: "WTC Tower 2",        state: "NY", role: "Administrator",             org: "Port Authority" },
+  // Pentagon
+  60910268: { name: "Janice Scott",                        loc: "Pentagon",           state: "VA", role: "Financial Manager",         org: "U.S. Army" },
+  60910284: { name: "Gerald (Geep) P. Fisher",             loc: "Pentagon",           state: "MD", role: "Consultant",                org: "Booz Allen Hamilton" },
+  60910910: { name: "Antoinette (Toni) Sherman",           loc: "Pentagon",           state: "MD", role: "Budget Analyst",            org: "U.S. Army" },
+  60910022: { name: "Donna Bowen",                         loc: "Pentagon",           state: "MD", role: "Communications Rep",        org: "Verizon" },
+  60910094: { name: "Rosa (Rosemary) Maria Chapa",         loc: "Pentagon",           state: "VA", role: "Senior Management Officer", org: "Defense Intelligence Agency" },
+  60910163: { name: "Scott Powell",                        loc: "Pentagon",           state: "MD", role: "Systems Engineer",          org: "BTG Inc." },
+  60910430: { name: "Lt. Commander David Lucian Williams", loc: "Pentagon",           state: "VA", role: "Lt. Commander",             org: "U.S. Navy" },
+  60910438: { name: "Angela Houtz",                        loc: "Pentagon",           state: "VA", role: "Senior Analyst",            org: "U.S. Navy" },
+  60910368: { name: "Maj. Kip P. Taylor",                  loc: "Pentagon",           state: "VA", role: "Major",                     org: "U.S. Army" },
+  // American Flight 11
+  60909591: { name: "Mary Wahlstrom",                      loc: "Flight 11", state: "UT", role: "Retired",                   org: "" },
+  60909723: { name: "Michael Theodoridis",                 loc: "Flight 11", state: "MA", role: "Technology Consultant",     org: "Self-Employed" },
+  // United Flight 93
+  60909765: { name: "Louis J. Nacke",                      loc: "Flight 93",   state: "NJ", role: "Business Owner",            org: "Amy's Toy Barn" },
+  60909322: { name: "Linda Gronlund",                      loc: "Flight 93",   state: "NY", role: "Attorney",                  org: "BMW of North America" },
+  60909323: { name: "Thomas E. Burnett Jr.",               loc: "Flight 93",   state: "CA", role: "COO",                       org: "Thoratec Corporation" },
+  60909303: { name: "CeeCee Lyles",                        loc: "Flight 93",   state: "FL", role: "Flight Attendant",          org: "United Airlines" },
+  60909304: { name: "Sandra (Sandy) W. Bradshaw",          loc: "Flight 93",   state: "NC", role: "Flight Attendant",          org: "United Airlines" },
+  60909378: { name: "Ronald Brandhorst Gamboa",            loc: "Flight 93",   state: "CA", role: "Athletic Director",         org: "Concord Union Elementary" },
+  60909335: { name: "Mark Rothenberg",                     loc: "Flight 93",   state: "NJ", role: "Business Owner",            org: "" },
+  60909339: { name: "Colleen Fraser",                      loc: "Flight 93",   state: "NJ", role: "Executive Director",        org: "Progressive Center for Independent Living" },
+  60909364: { name: "Daniel Brandhorst Gamboa",            loc: "Flight 93",   state: "CA", role: "Passenger",                 org: "" },
 };
 
 // Populated async by loadVictims() — do not edit directly
@@ -839,7 +845,17 @@ function showLoadingState() {
 
 function loadVictims() {
   // Use pre-fetched real data (avoids CORS); fall back to mock if unavailable
-  VICTIMS = VICTIMS_REAL.length ? VICTIMS_REAL : VICTIMS_MOCK;
+  // Merge PERSON_META overrides into each record (loc/state/role/org were empty strings when baked)
+  VICTIMS = (VICTIMS_REAL.length ? VICTIMS_REAL : VICTIMS_MOCK).map(v => {
+    const meta = PERSON_META[v.id] || {};
+    return {
+      ...v,
+      loc:   meta.loc   || v.loc,
+      state: meta.state || v.state,
+      role:  meta.role  || v.role,
+      org:   meta.org   || v.org,
+    };
+  });
   applyFilters();
 }
 
