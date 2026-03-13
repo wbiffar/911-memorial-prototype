@@ -968,7 +968,7 @@ function renderVictimCard(v, mode='list'){
         <img src="${photoSmall}" alt="${v.name}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #3c4d69;">
         <div>
           <h3 style="font-family:'DM Serif Text',serif;font-size:16px;color:#fff;margin-bottom:4px;">${v.name}</h3>
-          <p style="font-size:12px;color:#afadaa;">${v.born}–2001</p>
+          <p style="font-size:12px;color:#afadaa;">${v.born ? v.born + '–2001' : 'd. 2001'}</p>
           <p style="font-size:11px;color:#807e7a;">${v.role}</p>
         </div>
       </div>
@@ -987,7 +987,7 @@ function renderVictimCard(v, mode='list'){
     <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:24px;padding:24px;">
       <div style="display:flex;flex-direction:column;gap:8px;">
         <h3 style="font-family:'DM Serif Text',serif;font-size:30px;color:#fff;line-height:1.2;margin:0;">${v.name}</h3>
-        <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:#dcb05e;letter-spacing:-0.02em;margin:0;">${v.born} – 2001</p>
+        <p style="font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;color:#dcb05e;letter-spacing:-0.02em;margin:0;">${v.born ? v.born + ' – 2001' : 'd. 2001'}</p>
       </div>
       <p style="font-family:'PT Serif',serif;font-size:18px;color:#fff;line-height:1.5;margin:0;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">${v.bio}</p>
       <div style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;">
@@ -1018,7 +1018,13 @@ function renderResults(){
   countEl.textContent = `${victims.length.toLocaleString()} ${victims.length===VICTIMS.length?'Lives Remembered':'Results Found'}`;
   noRes.style.display = victims.length===0 ? 'block' : 'none';
 
-  // Build list inserting callouts
+  // Rescue callout elements before innerHTML wipes them if they were moved inside listEl
+  const callout = document.getElementById('memories-callout');
+  const grief = document.getElementById('grief-support');
+  if(callout) callout.remove();
+  if(grief) grief.remove();
+
+  // Build list inserting anchors
   const listFragments = [];
   victims.forEach((v, idx)=>{
     listFragments.push(renderVictimCard(v,'list'));
@@ -1032,17 +1038,15 @@ function renderResults(){
   listEl.innerHTML = listFragments.join('');
   gridEl.innerHTML = victims.map(v=>renderVictimCard(v,'grid')).join('');
 
-  // Insert callouts
-  const callout = document.getElementById('memories-callout');
-  const grief = document.getElementById('grief-support');
+  // Re-insert callouts after new anchors exist in DOM
   const anchor = document.getElementById('memories-callout-anchor');
   const griefAnchor = document.getElementById('grief-anchor');
-  if(anchor && victims.length > 3){
+  if(anchor && victims.length > 3 && callout){
     anchor.after(callout);
     callout.style.display='block';
     buildCarousel();
   }
-  if(griefAnchor && victims.length > 7){
+  if(griefAnchor && victims.length > 7 && grief){
     griefAnchor.after(grief);
     grief.style.display='block';
     buildGriefCarousel();
